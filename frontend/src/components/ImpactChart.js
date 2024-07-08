@@ -1,43 +1,60 @@
 // src/components/ImpactChart.js
 import React, { useEffect, useRef } from 'react';
 import { Chart, registerables } from 'chart.js';
-import { Bar } from 'react-chartjs-2';
 
-// Register Chart.js components
 Chart.register(...registerables);
 
 const ImpactChart = ({ data }) => {
   const chartRef = useRef(null);
-
-  // Prepare the data for the chart
-  const chartData = {
-    labels: data.map((record) => record.actionName),
-    datasets: [
-      {
-        label: 'Impact',
-        data: data.map((record) => record.Impact === 'High' ? 3 : record.Impact === 'Mid' ? 2 : 1),
-        backgroundColor: data.map((record) => {
-          if (record.Impact === 'High') return 'rgba(255, 99, 132, 0.6)';
-          if (record.Impact === 'Mid') return 'rgba(54, 162, 235, 0.6)';
-          return 'rgba(75, 192, 192, 0.6)';
-        }),
-      },
-    ],
-  };
+  const canvasRef = useRef(null);
 
   useEffect(() => {
-    const chartInstance = chartRef.current;
+    if (chartRef.current) {
+      chartRef.current.destroy(); // Destroy the existing chart before creating a new one
+    }
+    const ctx = canvasRef.current.getContext('2d');
+    chartRef.current = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map((record) => record.actionName),
+        datasets: [
+          {
+            label: 'Impact',
+            data: data.map((record) => {
+              switch (record.Impact) {
+                case 'High': return 3;
+                case 'Mid': return 2;
+                case 'Low': return 1;
+                default: return 0;
+              }
+            }),
+            backgroundColor: data.map((record) => {
+              switch (record.Impact) {
+                case 'High': return 'rgba(255, 99, 132, 0.6)';
+                case 'Mid': return 'rgba(54, 162, 235, 0.6)';
+                case 'Low': return 'rgba(75, 192, 192, 0.6)';
+                default: return 'rgba(201, 203, 207, 0.6)';
+              }
+            }),
+          },
+        ],
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+    });
 
     return () => {
-      if (chartInstance) {
-        chartInstance.destroy();
+      if (chartRef.current) {
+        chartRef.current.destroy(); // Clean up on component unmount
       }
     };
-  }, []);
+  }, [data]); // Re-run the effect when data changes
 
   return (
     <div>
-      <Bar ref={chartRef} data={chartData} />
+      <canvas ref={canvasRef} id="impactChart"></canvas>
     </div>
   );
 };
