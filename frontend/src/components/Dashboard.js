@@ -37,7 +37,7 @@ const Dashboard = ({ role }) => {
         setEditing(false);
         setShowSuccessMessage(true);
         setTimeout(() => setShowSuccessMessage(false), 3000);
-        fetchData(); // Re-fetch data to ensure frontend reflects backend changes
+        fetchData(); 
       })
       .catch((error) => console.error("Error updating records:", error));
   };
