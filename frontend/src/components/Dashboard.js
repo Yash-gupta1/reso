@@ -16,7 +16,7 @@ const Dashboard = ({ role }) => {
 
   const fetchData = () => {
     axios
-      .get("http://localhost:5000/api/records")
+      .get("https://reso-4.onrender.com")
       .then((response) => {
         setData(response.data);
       })
@@ -31,7 +31,7 @@ const Dashboard = ({ role }) => {
 
   const handleSave = () => {
     axios
-      .put("http://localhost:5000/api/updateRecords", data)
+      .put("https://reso-4.onrender.com", data)
       .then((response) => {
         console.log("Records updated successfully:", response.data);
         setEditing(false);
