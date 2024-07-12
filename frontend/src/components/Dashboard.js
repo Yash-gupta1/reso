@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from "react";
 import "./Dashboard.css";
 import axios from "axios";
-import ImpactChart from './ImpactChart';
-import RecordsList from './RecordsList';
+import ImpactChart from "./ImpactChart";
+import RecordsList from "./RecordsList";
 
 const Dashboard = ({ role }) => {
   const [data, setData] = useState([]);
@@ -16,7 +16,7 @@ const Dashboard = ({ role }) => {
 
   const fetchData = () => {
     axios
-      .get("https://reso-4.onrender.com")
+      .get("https://reso-4.onrender.com/api/records")
       .then((response) => {
         setData(response.data);
       })
@@ -31,13 +31,13 @@ const Dashboard = ({ role }) => {
 
   const handleSave = () => {
     axios
-      .put("https://reso-4.onrender.com", data)
+      .put("https://reso-4.onrender.com/api/updateRecords", data)
       .then((response) => {
         console.log("Records updated successfully:", response.data);
         setEditing(false);
         setShowSuccessMessage(true);
         setTimeout(() => setShowSuccessMessage(false), 3000);
-        fetchData(); 
+        fetchData();
       })
       .catch((error) => console.error("Error updating records:", error));
   };
@@ -49,7 +49,11 @@ const Dashboard = ({ role }) => {
         <p className="success-message">Data saved successfully!</p>
       )}
       <ImpactChart data={data} />
-      <RecordsList data={data} handleEditChange={handleEditChange} editing={editing} />
+      <RecordsList
+        data={data}
+        handleEditChange={handleEditChange}
+        editing={editing}
+      />
       {editing ? (
         <button className="save-button" onClick={handleSave}>
           Save

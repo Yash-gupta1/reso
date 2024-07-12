@@ -12,7 +12,7 @@ const Login = ({ onLogin }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("https://reso-4.onrender.com", {
+      const response = await axios.post("https://reso-4.onrender.com/api/login", {
         username,
         password,
       });
